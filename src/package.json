@@ -1,0 +1,21 @@
+{
+  "name": "recipepe",
+  "version": "1.0.0",
+  "description": "Oh so smart recipe generator",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "recipe",
+    "pepe",
+    "frog",
+    "french-cuisine",
+    "cooking"
+  ],
+  "author": "Adam Zarczynski, Jakub Szumilas",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
