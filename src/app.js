@@ -15,4 +15,5 @@ app.get('/rzodkiew', (req,res) => {
 })
 
 app.get('/buraki', (req,res) => {
-    res.send('Something called buraki has been requested. Sadly, there is no buraki here.') // TODO: Make it a 404
+    res.send('Something called buraki has been requested. Sadly, there is no buraki here.')
+})// TODO: Make it a 404
