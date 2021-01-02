@@ -6,11 +6,16 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.set('useCreateIndex', true);
 
-const Dish = require('../db/Schema')
+const Dish = require('./schema/dishSchema')
+const User=require('./schema/userSchema')
 const asyncHandler = require("../db/async-handler");
 
 //import require data
-const dishRouter = require('./dish.controller');
+// const dishRouter = require('./dish.controller');
+
+const bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.get('/', (req, res) => {
   res.send('Hello, Mr. World!')
@@ -29,48 +34,24 @@ app.get('/buraki', (req,res) => {
 })// TODO: Make it a 404
 
 
-
-// const express = require('express')
-// const app = express()
-
-const errorHandler = (err, req, res, next) => {
-    console.error(err.stack);
-    res.status(err.status || 500).send(
-        {
-            message: err.message || 'Error occurred'
-        }
-    )
-}
-
-// Dish.find({ 'name': 'Ale5sss5' }, 'name age', function (err, athletes) {
-//     if (err) return errorHandler(err);
-//     // 'athletes' contains the list of athletes that match the criteria.
-// })
-//
 // const ai = new Dish({name:'Ale5sss5'});
 // ai.save(function (err) {
 //     if (err) return errorHandler(err);
 //     // saved!
 // });
 
-// POST /api/dish
-app.post('/dish', asyncHandler(async (req, res) => {
-    const body = req.body;
-    const dish = await Dish.create(body);
-    res.json(dish.view());
-}))
 
-// app.get('/show', (req,res) => {
-//     const query = Dish.findOne({ name: 'Ale5sss5'},  function (err, athletes) {
-//         if (err) console.log(err);
-//         // 'athletes' contains the list of athletes that match the criteria.
-//     })
-//     console.log(typeof query)
-//     res.json(query.user_view())
-// })
 
-app.route("/find").get(function(req, res) {
-    Dish.find({ name: 'Ale5sss5' }, function(err, result) {
+/*
+const dish1 = new Dish({name:'zupa pomidorowa', ingredients:['pomidor','woda'], time:15, text:'pomieszaj wszytsko', likes:0});
+const dish2 = new Dish({name:'rosół', ingredients:['kurczak', 'woda'], time:10, text:'pomieszaj wszytsko', likes:0});
+const dish3 = new Dish({name:'klopsiki', ingredients:['kurczak'], time:50, text:'pomieszaj wszytsko', likes:0});
+const dish4 = new Dish({name:'lody', ingredients:['woda', 'truskawki'], time:25, text:'pomieszaj wszytsko', likes:0});
+const dish5 = new Dish({name:'tort', ingredients:['truskawki', 'proszek'], time:30, text:'pomieszaj wszytsko', likes:0});
+*/
+
+app.route("/find/name").get(function(req, res) {
+    Dish.find({ name: 'tort' }, function(err, result) {
         if (err) {
             console.log(err);
         } else {
@@ -78,6 +59,41 @@ app.route("/find").get(function(req, res) {
         }
     });
 });
+
+app.route("/find/ingredients").get(function(req, res) {
+    Dish.find({ ingredients: 'woda' }, function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(result);
+        }
+    });
+});
+
+
+app.post('/find/name', asyncHandler(async (req, res) => {
+    const name = req.body.name;
+    Dish.find({ name: name }, function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(result);
+        }
+    });
+
+}))
+
+app.post('/find/ingredients', asyncHandler(async (req, res) => {
+    const name = req.body.name;
+    Dish.find({ ingredients: name }, function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(result);
+        }
+    });
+
+}))
 
 
 
