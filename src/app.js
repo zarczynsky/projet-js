@@ -10,6 +10,18 @@ const Dish = require('./schema/dishSchema')
 const User=require('./schema/userSchema')
 const asyncHandler = require("../db/async-handler");
 
+const argon2 = require('argon2');
+
+const errorHandler = (err, req, res, next) => {
+    console.error(err.stack);
+    res.status(err.status || 500).send(
+        {
+            message: err.message || 'Error occurred'
+        }
+    )
+}
+
+
 //import require data
 // const dishRouter = require('./dish.controller');
 
@@ -50,26 +62,6 @@ const dish4 = new Dish({name:'lody', ingredients:['woda', 'truskawki'], time:25,
 const dish5 = new Dish({name:'tort', ingredients:['truskawki', 'proszek'], time:30, text:'pomieszaj wszytsko', likes:0});
 */
 
-app.route("/find/name").get(function(req, res) {
-    Dish.find({ name: 'tort' }, function(err, result) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(result);
-        }
-    });
-});
-
-app.route("/find/ingredients").get(function(req, res) {
-    Dish.find({ ingredients: 'woda' }, function(err, result) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(result);
-        }
-    });
-});
-
 
 app.post('/find/name', asyncHandler(async (req, res) => {
     const name = req.body.name;
@@ -96,4 +88,55 @@ app.post('/find/ingredients', asyncHandler(async (req, res) => {
 }))
 
 
+app.post('/add', asyncHandler(async (req, res) => {
+    const name=req.body.name;
+    const ingredients=req.body.ingredients;
+    const time=req.body.times;
+    const text="cokolwiek";
+    const likes=req.body.likes;
+
+
+    const ai = new Dish({name: name, ingredients: ingredients, time: time, text: text, likes:likes});
+    await ai.save(function (err) {
+    if (err) console.log(err);
+
+    // saved!
+});
+    res.json({status: "Przepis dodany"})
+}))
+
+
+app.post('/createaccount', asyncHandler(async (req, res) => {
+    const name=req.body.name;
+    const password=req.body.password;
+    try {
+        const hash = await argon2.hash(password);
+        const user=new User({name: name, password: hash});
+        await user.save(function (err) {
+            if (err) console.log(err);
+            // saved!
+        });
+        res.json({status: "Konto utworzone"})
+    } catch (err) {
+        res.json({status: "error"})
+    }
+
+}))
+
+
+app.post('/login', asyncHandler(async (req, res) => {
+    const name=req.body.name;
+    const password=req.body.password;
+    const hashedpassword = await User.findOne({name: name});
+
+    try {
+        if (await argon2.verify(hashedpassword['password'], password)) {
+            res.json({status: "log in"})
+        } else {
+            res.json({status: "bad password"})
+        }
+    } catch (err) {
+        res.json({status: "no user"})
+    }
+}))
 
