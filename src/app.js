@@ -8,8 +8,7 @@ mongoose.set('useCreateIndex', true);
 
 const Dish = require('./schema/dishSchema')
 const User=require('./schema/userSchema')
-const asyncHandler = require("../db/async-handler");
-
+const asyncHandler =  require("./api/async-handler");
 const argon2 = require('argon2');
 
 const errorHandler = (err, req, res, next) => {
@@ -20,7 +19,6 @@ const errorHandler = (err, req, res, next) => {
         }
     )
 }
-
 
 //import require data
 // const dishRouter = require('./dish.controller');
@@ -45,14 +43,11 @@ app.get('/buraki', (req,res) => {
     res.send('Something called buraki has been requested. Sadly, there is no buraki here.')
 })// TODO: Make it a 404
 
-
 // const ai = new Dish({name:'Ale5sss5'});
 // ai.save(function (err) {
 //     if (err) return errorHandler(err);
 //     // saved!
 // });
-
-
 
 /*
 const dish1 = new Dish({name:'zupa pomidorowa', ingredients:['pomidor','woda'], time:15, text:'pomieszaj wszytsko', likes:0});
@@ -61,7 +56,6 @@ const dish3 = new Dish({name:'klopsiki', ingredients:['kurczak'], time:50, text:
 const dish4 = new Dish({name:'lody', ingredients:['woda', 'truskawki'], time:25, text:'pomieszaj wszytsko', likes:0});
 const dish5 = new Dish({name:'tort', ingredients:['truskawki', 'proszek'], time:30, text:'pomieszaj wszytsko', likes:0});
 */
-
 
 app.post('/find/name', asyncHandler(async (req, res) => {
     const name = req.body.name;
@@ -87,7 +81,6 @@ app.post('/find/ingredients', asyncHandler(async (req, res) => {
 
 }))
 
-
 app.post('/add', asyncHandler(async (req, res) => {
     const name=req.body.name;
     const ingredients=req.body.ingredients;
@@ -104,7 +97,6 @@ app.post('/add', asyncHandler(async (req, res) => {
 });
     res.json({status: "Przepis dodany"})
 }))
-
 
 app.post('/createaccount', asyncHandler(async (req, res) => {
     const name=req.body.name;
@@ -123,7 +115,6 @@ app.post('/createaccount', asyncHandler(async (req, res) => {
 
 }))
 
-
 app.post('/login', asyncHandler(async (req, res) => {
     const name=req.body.name;
     const password=req.body.password;
@@ -139,4 +130,3 @@ app.post('/login', asyncHandler(async (req, res) => {
         res.json({status: "no user"})
     }
 }))
-
