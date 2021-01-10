@@ -11,8 +11,11 @@ const config = require('./config')
 
 const Dish = require('./schema/dishSchema')
 const User = require('./schema/userSchema')
-const asyncHandler = require("../db/async-handler")
+const asyncHandler =  require("./api/async-handler")
 const {sign} = require('./services/jwt')
+
+const User=require('./schema/userSchema')
+
 
 const argon2 = require('argon2');
 app.use(cookieParser(config.cookiesSecret))
