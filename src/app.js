@@ -6,10 +6,19 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test', {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.set('useCreateIndex', true);
 
+const cookieParser = require('cookie-parser')
+const config = require('./config')
+
 const Dish = require('./schema/dishSchema')
-const User=require('./schema/userSchema')
-const asyncHandler =  require("./api/async-handler");
+const User = require('./schema/userSchema')
+const asyncHandler = require("../db/async-handler")
+const {sign} = require('./services/jwt')
+
 const argon2 = require('argon2');
+app.use(cookieParser(config.cookiesSecret))
+
+const UnauthorizedException = require("./exceptions/unauthorized-exception");
+
 
 const errorHandler = (err, req, res, next) => {
     console.error(err.stack);
@@ -71,6 +80,12 @@ app.post('/find/name', asyncHandler(async (req, res) => {
 
 app.post('/find/ingredients', asyncHandler(async (req, res) => {
     const name = req.body.name;
+    // const authHeader = req.headers.authorization;
+    // if(!authHeader){
+    //     throw new UnauthorizedException();
+    // }
+    //
+    // console.log(authHeader)
     Dish.find({ ingredients: name }, function(err, result) {
         if (err) {
             console.log(err);
@@ -85,13 +100,24 @@ app.post('/add', asyncHandler(async (req, res) => {
     const name=req.body.name;
     const ingredients=req.body.ingredients;
     const time=req.body.times;
-    const text="cokolwiek";
+    const recipe=req.body.recipe;
     const likes=req.body.likes;
 
+    // const authHeader = req.headers.authorization;
+    // if(!authHeader){
+    //     throw new UnauthorizedException();
+    // }
+    //
+    // console.log(authHeader)
 
-    const ai = new Dish({name: name, ingredients: ingredients, time: time, text: text, likes:likes});
+    // const b64auth = authHeader.split(' ')[1] || ''
+    // const [email, password] = Buffer.from(b64auth, 'base64').toString().split(':')
+
+
+    const ai = new Dish({name: name, ingredients: ingredients, time: time, text: recipe, likes:likes});
     await ai.save(function (err) {
     if (err) console.log(err);
+
 
     // saved!
 });
@@ -122,7 +148,11 @@ app.post('/login', asyncHandler(async (req, res) => {
 
     try {
         if (await argon2.verify(hashedpassword['password'], password)) {
-            res.json({status: "log in"})
+
+            const token = sign(name);
+            res.cookie('auth', token, config.cookiesOptions)
+
+            return res.json({status: "log in"})
         } else {
             res.json({status: "bad password"})
         }
