@@ -13,7 +13,6 @@ const cookieParser = require('cookie-parser')
 const config = require('./config')
 
 const Dish = require('./schema/dishSchema')
-const User = require('./schema/userSchema')
 const asyncHandler = require("./api/async-handler")
 const {
     sign
