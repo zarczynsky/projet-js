@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const port = 3000
+const NotFoundException = require('./exceptions/not-found-exception')
 
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/test', {
@@ -195,9 +196,11 @@ app.post('/login', asyncHandler(async (req, res) => {
 }))
 
 const undefinedEndpointHandler = (req, res) => {
+    
     res.status(404).send({
         error: 'Undefined Endpoint'
     })
+    throw new NotFoundException()
 }
 
 app.use(undefinedEndpointHandler)
