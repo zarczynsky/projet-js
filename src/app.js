@@ -17,6 +17,7 @@ const {sign} = require('./services/jwt')
 const User=require('./schema/userSchema')
 
 
+
 const argon2 = require('argon2');
 app.use(cookieParser(config.cookiesSecret))
 
@@ -163,3 +164,9 @@ app.post('/login', asyncHandler(async (req, res) => {
         res.json({status: "no user"})
     }
 }))
+
+const undefinedEndpointHandler = (req, res) => {
+    res.status(404).send({error: 'Undefined Endpoint'})
+}
+
+app.use(undefinedEndpointHandler)
