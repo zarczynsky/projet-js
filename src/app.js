@@ -105,7 +105,6 @@ app.post('/find/ingredients', asyncHandler(async (req, res) => {
             res.json(result);
         }
     });
-
 }))
 
 app.post('/add', asyncHandler(async (req, res) => {
