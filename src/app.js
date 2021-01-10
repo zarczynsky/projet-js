@@ -52,12 +52,13 @@ app.listen(port, () => {
 })
 
 app.get('/rzodkiew', (req, res) => {
-    res.send('Something called rzodkiew has been requested. Sadly, there is no rzodkiew here.') // TODO: Make it a 404
+    res.send(`
+    <center>It's-a-me, rzodkiewko!<br/><img src="https://www.rynek-rolny.pl/images/articles/560/67c46c78378b9f058d70895ce23a6158-carmesa.jpg"/></center>`) // TODO: Make it a 404
 })
 
-app.get('/buraki', (req, res) => {
-    res.send('Something called buraki has been requested. Sadly, there is no buraki here.')
-}) // TODO: Make it a 404
+app.get('/burak', (req, res) => {
+    res.send('<center>Something called buraki has been requested. Sadly, there is no buraki here.<br/>Here\'s a burak for you:<br/><img src="https://lh3.googleusercontent.com/proxy/JxHBQ-nSu-el-GHlZ5XwSkOg71O76BSzvVlqWnX2Itwq8SPsBwkbUem7fAyi6wQYQqYMwHPF5ee0qSJuhiFKrcLS0r4zOG6khLPGn7dOQKhTWQ"/></center>')
+})
 
 // const ai = new Dish({name:'Ale5sss5'});
 // ai.save(function (err) {
@@ -203,4 +204,5 @@ const undefinedEndpointHandler = (req, res) => {
     throw new NotFoundException()
 }
 
+app.use(errorHandler)
 app.use(undefinedEndpointHandler)
