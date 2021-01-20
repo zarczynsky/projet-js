@@ -22,18 +22,8 @@ app.use(cookieParser(config.cookiesSecret))
 
 const UnauthorizedException = require("./exceptions/unauthorized-exception");
 
-
-const errorHandler = (err, req, res, next) => {
-    console.error(err.stack);
-    res.status(err.status || 500).send(
-        {
-            message: err.message || 'Error occurred'
-        }
-    )
-}
-
-//import require data
-// const dishRouter = require('./dish.controller');
+const errorHandler = require('./middlewares/errorHandler');
+app.use(errorHandler);
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -54,14 +44,6 @@ app.get('/rzodkiew', (req,res) => {
 app.get('/buraki', (req,res) => {
     res.send('Something called buraki has been requested. Sadly, there is no buraki here.')
 })// TODO: Make it a 404
-
-
-// const ai = new Dish({name:'Ale5sss5'});
-// ai.save(function (err) {
-//     if (err) return errorHandler(err);
-//     // saved!
-// });
-
 
 
 /*
@@ -92,11 +74,8 @@ app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
         }
     });
 
+    console.log(author_name.user_view())
     let result = {};
-    // result.push({
-    //     key:   "keyName",
-    //     value: "the value"
-    // });
     result["author"] = author_name["name"];
     result["dish"] = dish
 
@@ -105,11 +84,6 @@ app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
 
 app.post('/dish/find/ingredients',auth({ required: true}) ,asyncHandler(async (req, res) => {
     const reqIngredients = req.body.ingredients;
-    // const authHeader = req.headers.authorization;
-    // if(!authHeader){
-    //     throw new UnauthorizedException();
-    // }
-    //
     Dish.find({ ingredients: reqIngredients }, function(err, result) {
         if (err) {
             console.log(err);
@@ -131,17 +105,6 @@ app.post('/dish', asyncHandler(async (req, res) => {
 
     const token = req.cookies.auth
 
-    // const authHeader = req.headers.authorization;
-    // if(!authHeader){
-    //     throw new UnauthorizedException();
-    // }
-    //
-    // console.log(authHeader)
-
-    // const b64auth = authHeader.split(' ')[1] || ''
-    // const [email, password] = Buffer.from(b64auth, 'base64').toString().split(':')
-
-
     const ai = new Dish({name: name, ingredients: ingredients, time: time, text: recipe, likes:likes,
         author_id: id});
     await ai.save(function (err) {
@@ -150,9 +113,6 @@ app.post('/dish', asyncHandler(async (req, res) => {
     else{
         res.json({status: "Przepis dodany"});
     }
-
-
-    // saved!
 });
 
 }))
@@ -198,4 +158,6 @@ app.post('/user/token', asyncHandler(async (req, res) => {
         res.json({status: "no user"})
     }
 }))
+
+
 

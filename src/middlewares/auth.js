@@ -4,7 +4,7 @@ const User = require('../schema/userSchema');
 const UnauthorizedException = require("../exceptions/unauthorized-exception");
 
 
-module.exports = ({required} = {}) => (req, res, next) => {
+module.exports = () => (req, res, next) => {
     const token = req.cookies.auth
     if (!token) throw new UnauthorizedException();
     let decodedToken;
