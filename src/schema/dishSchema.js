@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 
 const dishSchema = new mongoose.Schema({
-    name: {type: String, unique:true},
+    name: {type: String, unique:true, trim:true},
     ingredients: {type: Array},
     time: {type: Number},
     text: {type: String},
-    likes: {type: Number}
+    likes: {type: Number},
+    author_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    }
 });
 
 dishSchema.methods = {
@@ -19,20 +23,17 @@ dishSchema.methods = {
         }
     }
 }
+// second try
 
-dishSchema.methods.user_view = function (){
-    return {
-        name: this.name,
-        ingredients: this.ingredients,
-        text: this.text,
-        time: this.time,
-        likes: this.likes
-    }
-}
-
-//dishSchema.methods.findSimilarTypes = function(cb) {
-//    return mongoose.model('Animal').find({ name: this.name }, cb);
-//};
+// dishSchema.methods.user_view = function (){
+//     return {
+//         name: this.name,
+//         ingredients: this.ingredients,
+//         text: this.text,
+//         time: this.time,
+//         likes: this.likes
+//     }
+// }
 
 let mongo = mongoose.model('Dish', dishSchema);
 module.exports = mongo
