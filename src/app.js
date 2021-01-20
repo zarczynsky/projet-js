@@ -39,17 +39,16 @@ app.use(bodyParser.urlencoded({
     extended: true
 })); // support encoded bodies
 
-app.get('/', asyncHandler(async (req, res) =>
+app.get('/', (req, res) => {
     res.send('Hello, Mr. World!')
-}))
+})
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 })
 
-app.get('/rzodkiew', asyncHandler(async (req, res) =>
-    res.send(`
-    <center>It's-a-me, rzodkiewko!<br/><img src="https://www.rynek-rolny.pl/images/articles/560/67c46c78378b9f058d70895ce23a6158-carmesa.jpg"/></center>`) // TODO: Make it a 404
+app.get('/rzodkiew', asyncHandler(async (req, res) => {
+    res.send(`<center>It's-a-me, rzodkiewko!<br/><img src="https://www.rynek-rolny.pl/images/articles/560/67c46c78378b9f058d70895ce23a6158-carmesa.jpg"/></center>`) // TODO: Make it a 404
 }))
 
 app.get('/burak', asyncHandler(async (req, res) => {
