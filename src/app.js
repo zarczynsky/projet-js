@@ -39,22 +39,22 @@ app.use(bodyParser.urlencoded({
     extended: true
 })); // support encoded bodies
 
-app.get('/', (req, res) => {
+app.get('/', asyncHandler(async (req, res) =>
     res.send('Hello, Mr. World!')
-})
+}))
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 })
 
-app.get('/rzodkiew', (req, res) => {
+app.get('/rzodkiew', asyncHandler(async (req, res) =>
     res.send(`
     <center>It's-a-me, rzodkiewko!<br/><img src="https://www.rynek-rolny.pl/images/articles/560/67c46c78378b9f058d70895ce23a6158-carmesa.jpg"/></center>`) // TODO: Make it a 404
-})
+}))
 
-app.get('/burak', (req, res) => {
+app.get('/burak', asyncHandler(async (req, res) => {
     res.send('<center>Something called buraki has been requested. Sadly, there is no buraki here.<br/>Here\'s a burak for you:<br/><img src="https://i.pinimg.com/originals/aa/7a/54/aa7a54f2db2336748cd4bb46c4013fd0.jpg"></center>')
-})
+}))
 
 // const dish1 = new Dish({name:'zupa pomidorowa', ingredients:['pomidor','woda'], time:15, text:'pomieszaj wszytsko', likes:0});
 // const dish2 = new Dish({name:'rosół', ingredients:['kurczak', 'woda'], time:10, text:'pomieszaj wszytsko', likes:0});
