@@ -81,8 +81,6 @@ app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
         }
     });
 
-    console.log(dish["author_id"])
-
     const author_name = await User.findOne({ _id: dish["author_id"] }, function(err, result) {
         if (err) {
             console.log(err);
@@ -99,8 +97,6 @@ app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
     result["author"] = author_name["name"];
     result["dish"] = dish
 
-    console.log(result)
-
     res.json(result);
 }))
 
@@ -111,7 +107,6 @@ app.post('/dish/find/ingredients', asyncHandler(async (req, res) => {
     //     throw new UnauthorizedException();
     // }
     //
-    console.log(reqIngredients)
     Dish.find({ ingredients: reqIngredients }, function(err, result) {
         if (err) {
             console.log(err);
