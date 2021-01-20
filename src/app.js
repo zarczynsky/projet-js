@@ -8,6 +8,8 @@ mongoose.set('useCreateIndex', true);
 
 const cookieParser = require('cookie-parser')
 const config = require('./config')
+const jwt = require('jsonwebtoken');
+const auth = require('./middlewares/auth')
 
 const Dish = require('./schema/dishSchema')
 const User = require('./schema/userSchema')
@@ -16,6 +18,7 @@ const {sign} = require('./services/jwt')
 
 const argon2 = require('argon2');
 app.use(cookieParser(config.cookiesSecret))
+
 
 const UnauthorizedException = require("./exceptions/unauthorized-exception");
 
@@ -100,7 +103,7 @@ app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
     res.json(result);
 }))
 
-app.post('/dish/find/ingredients', asyncHandler(async (req, res) => {
+app.post('/dish/find/ingredients',auth({ required: true}) ,asyncHandler(async (req, res) => {
     const reqIngredients = req.body.ingredients;
     // const authHeader = req.headers.authorization;
     // if(!authHeader){
@@ -125,6 +128,8 @@ app.post('/dish', asyncHandler(async (req, res) => {
     const recipe=req.body.recipe;
     const likes=req.body.likes;
     const id = req.body.author_id
+
+    const token = req.cookies.auth
 
     // const authHeader = req.headers.authorization;
     // if(!authHeader){
