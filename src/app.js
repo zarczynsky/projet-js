@@ -30,6 +30,7 @@ app.use(cookieParser(config.cookiesSecret))
 const UnauthorizedException = require("./exceptions/unauthorized-exception");
 
 const errorHandler = require('./middlewares/errorHandler');
+const undefinedEndpointHandler = require('./middlewares/undefinedEndpointHandler');
 app.use(errorHandler);
 
 const bodyParser = require('body-parser');
@@ -52,7 +53,7 @@ app.get('/rzodkiew', (req, res) => {
 })
 
 app.get('/burak', (req, res) => {
-    res.send('<center>Something called buraki has been requested. Sadly, there is no buraki here.<br/>Here\'s a burak for you:<br/><img src="https://lh3.googleusercontent.com/proxy/JxHBQ-nSu-el-GHlZ5XwSkOg71O76BSzvVlqWnX2Itwq8SPsBwkbUem7fAyi6wQYQqYMwHPF5ee0qSJuhiFKrcLS0r4zOG6khLPGn7dOQKhTWQ"/></center>')
+    res.send('<center>Something called buraki has been requested. Sadly, there is no buraki here.<br/>Here\'s a burak for you:<br/><img src="https://i.pinimg.com/originals/aa/7a/54/aa7a54f2db2336748cd4bb46c4013fd0.jpg"></center>')
 })
 
 /*
@@ -177,13 +178,18 @@ app.post('/user/token', asyncHandler(async (req, res) => {
     }
 }))
 
-const undefinedEndpointHandler = (req, res) => {
+// const undefinedEndpointHandler = (req, res) => {
     
-    res.status(404).send({
-        error: 'Undefined Endpoint'
-    })
-    throw new NotFoundException()
-}
+//     res.status(404).send({
+//         error: 'Undefined Endpoint'
+//     })
+//     throw new NotFoundException()
+// }
 
 app.use(errorHandler)
-app.use(undefinedEndpointHandler)
+app.use('*', undefinedEndpointHandler)
+
+//The 404 Route (ALWAYS Keep this as the last route)
+// app.get('*', function(req, res){
+//     res.status(404).send('<body style="background-color:black; padding: 30px; color: white"><center><h2><u>404 Error</u></h2><h1>I have no idea where this will lead us. But I have a definite feeling it will be a place both wonderful and strange.</h1>- Agent Dale Cooper.</center></body>');
+// });
