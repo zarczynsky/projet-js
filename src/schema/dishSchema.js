@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
 
 const dishSchema = new mongoose.Schema({
-    name: {type: String, unique:true},
+    name: {type: String, unique:true, trim:true},
     ingredients: {type: Array},
     time: {type: Number},
     text: {type: String},
-    likes: {type: Number}
+    likes: {type: Number},
+    author_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'user'
+    }
 });
 
 dishSchema.methods = {

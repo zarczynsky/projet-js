@@ -70,27 +70,49 @@ const dish5 = new Dish({name:'tort', ingredients:['truskawki', 'proszek'], time:
 */
 
 
-app.post('/find/name', asyncHandler(async (req, res) => {
+app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
     const name = req.body.name;
-    Dish.find({ name: name }, function(err, result) {
+    //name = req.params.n;
+    const dish = await Dish.findOne({ name: name }, function(err, result) {
         if (err) {
             console.log(err);
         } else {
-            res.json(result);
+            return(result);
         }
     });
 
+    console.log(dish["author_id"])
+
+    const author_name = await User.findOne({ _id: dish["author_id"] }, function(err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            return(result["name"]);
+        }
+    });
+
+    let result = {};
+    // result.push({
+    //     key:   "keyName",
+    //     value: "the value"
+    // });
+    result["author"] = author_name["name"];
+    result["dish"] = dish
+
+    console.log(result)
+
+    res.json(result);
 }))
 
-app.post('/find/ingredients', asyncHandler(async (req, res) => {
-    const name = req.body.name;
+app.post('/dish/find/ingredients', asyncHandler(async (req, res) => {
+    const reqIngredients = req.body.ingredients;
     // const authHeader = req.headers.authorization;
     // if(!authHeader){
     //     throw new UnauthorizedException();
     // }
     //
-    // console.log(authHeader)
-    Dish.find({ ingredients: name }, function(err, result) {
+    console.log(reqIngredients)
+    Dish.find({ ingredients: reqIngredients }, function(err, result) {
         if (err) {
             console.log(err);
         } else {
@@ -101,12 +123,13 @@ app.post('/find/ingredients', asyncHandler(async (req, res) => {
 }))
 
 
-app.post('/add', asyncHandler(async (req, res) => {
+app.post('/dish', asyncHandler(async (req, res) => {
     const name=req.body.name;
     const ingredients=req.body.ingredients;
     const time=req.body.times;
     const recipe=req.body.recipe;
     const likes=req.body.likes;
+    const id = req.body.author_id
 
     // const authHeader = req.headers.authorization;
     // if(!authHeader){
@@ -119,28 +142,36 @@ app.post('/add', asyncHandler(async (req, res) => {
     // const [email, password] = Buffer.from(b64auth, 'base64').toString().split(':')
 
 
-    const ai = new Dish({name: name, ingredients: ingredients, time: time, text: recipe, likes:likes});
+    const ai = new Dish({name: name, ingredients: ingredients, time: time, text: recipe, likes:likes,
+        author_id: id});
     await ai.save(function (err) {
-    if (err) console.log(err);
+    if (err) {console.log(err);
+        res.json({status: "Błąd bazy"})}
+    else{
+        res.json({status: "Przepis dodany"});
+    }
 
 
     // saved!
 });
-    res.json({status: "Przepis dodany"})
+
 }))
 
 
-app.post('/createaccount', asyncHandler(async (req, res) => {
+app.post('/user', asyncHandler(async (req, res) => {
     const name=req.body.name;
     const password=req.body.password;
     try {
         const hash = await argon2.hash(password);
         const user=new User({name: name, password: hash});
         await user.save(function (err) {
-            if (err) console.log(err);
-            // saved!
+            if (err) {console.log(err);
+            res.json({status: "Błąd bazy"});}
+            else {
+                res.json({status: "Konto utworzone"})
+            }
         });
-        res.json({status: "Konto utworzone"})
+
     } catch (err) {
         res.json({status: "error"})
     }
@@ -148,7 +179,7 @@ app.post('/createaccount', asyncHandler(async (req, res) => {
 }))
 
 
-app.post('/login', asyncHandler(async (req, res) => {
+app.post('/user/token', asyncHandler(async (req, res) => {
     const name=req.body.name;
     const password=req.body.password;
     const hashedpassword = await User.findOne({name: name});
