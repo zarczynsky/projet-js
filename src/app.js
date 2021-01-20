@@ -39,22 +39,22 @@ app.use(bodyParser.urlencoded({
     extended: true
 })); // support encoded bodies
 
-app.get('/', (req, res) => {
+app.get('/', asyncHandler(async (req, res) => {
     res.send('Hello, Mr. World!')
-})
+}))
 
 app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`)
 })
 
-app.get('/rzodkiew', (req, res) => {
+app.get('/rzodkiew', asyncHandler(async (req, res) => {
     res.send(`
     <center>It's-a-me, rzodkiewko!<br/><img src="https://www.rynek-rolny.pl/images/articles/560/67c46c78378b9f058d70895ce23a6158-carmesa.jpg"/></center>`) // TODO: Make it a 404
-})
+}))
 
-app.get('/burak', (req, res) => {
+app.get('/burak', asyncHandler(async (req, res) => {
     res.send('<center>Something called buraki has been requested. Sadly, there is no buraki here.<br/>Here\'s a burak for you:<br/><img src="https://i.pinimg.com/originals/aa/7a/54/aa7a54f2db2336748cd4bb46c4013fd0.jpg"></center>')
-})
+}))
 
 
 // const dish1 = new Dish({name:'zupa pomidorowa', ingredients:['pomidor','woda'], time:15, text:'pomieszaj wszytsko', likes:0});
@@ -68,19 +68,23 @@ app.get('/burak', (req, res) => {
 app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
     const name = req.body.name;
     //name = req.params.n;
-    const dish = await Dish.findOne({ name: name }, function(err, result) {
+    const dish = await Dish.findOne({
+        name: name
+    }, function (err, result) {
         if (err) {
             console.log(err);
         } else {
-            return(result);
+            return (result);
         }
     });
 
-    const author_name = await User.findOne({ _id: dish["author_id"] }, function(err, result) {
+    const author_name = await User.findOne({
+        _id: dish["author_id"]
+    }, function (err, result) {
         if (err) {
             console.log(err);
         } else {
-            return(result["name"]);
+            return (result["name"]);
         }
     });
 
@@ -92,9 +96,13 @@ app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
     res.json(result);
 }))
 
-app.post('/dish/find/ingredients',auth({ required: true}) ,asyncHandler(async (req, res) => {
+app.post('/dish/find/ingredients', auth({
+    required: true
+}), asyncHandler(async (req, res) => {
     const reqIngredients = req.body.ingredients;
-    Dish.find({ ingredients: reqIngredients }, function(err, result) {
+    Dish.find({
+        ingredients: reqIngredients
+    }, function (err, result) {
         if (err) {
             console.log(err);
         } else {
@@ -105,31 +113,42 @@ app.post('/dish/find/ingredients',auth({ required: true}) ,asyncHandler(async (r
 
 
 app.post('/dish', asyncHandler(async (req, res) => {
-    const name=req.body.name;
-    const ingredients=req.body.ingredients;
-    const time=req.body.times;
-    const recipe=req.body.recipe;
-    const likes=req.body.likes;
+    const name = req.body.name;
+    const ingredients = req.body.ingredients;
+    const time = req.body.times;
+    const recipe = req.body.recipe;
+    const likes = req.body.likes;
     const id = req.body.author_id
 
     const token = req.cookies.auth
 
-    const ai = new Dish({name: name, ingredients: ingredients, time: time, text: recipe, likes:likes,
-        author_id: id});
+    const ai = new Dish({
+        name: name,
+        ingredients: ingredients,
+        time: time,
+        text: recipe,
+        likes: likes,
+        author_id: id
+    });
     await ai.save(function (err) {
-    if (err) {console.log(err);
-        res.json({status: "Błąd bazy"})}
-    else{
-        res.json({status: "Przepis dodany"});
-    }
-});
+        if (err) {
+            console.log(err);
+            res.json({
+                status: "Błąd bazy"
+            })
+        } else {
+            res.json({
+                status: "Przepis dodany"
+            });
+        }
+    });
 
 }))
 
 
 app.post('/user', asyncHandler(async (req, res) => {
-    const name=req.body.name;
-    const password=req.body.password;
+    const name = req.body.name;
+    const password = req.body.password;
     try {
         const hash = await argon2.hash(password);
         const user = new User({
@@ -137,10 +156,15 @@ app.post('/user', asyncHandler(async (req, res) => {
             password: hash
         });
         await user.save(function (err) {
-            if (err) {console.log(err);
-            res.json({status: "Błąd bazy"});}
-            else {
-                res.json({status: "Konto utworzone"})
+            if (err) {
+                console.log(err);
+                res.json({
+                    status: "Błąd bazy"
+                });
+            } else {
+                res.json({
+                    status: "Konto utworzone"
+                })
             }
         });
     } catch (err) {
@@ -153,9 +177,11 @@ app.post('/user', asyncHandler(async (req, res) => {
 
 
 app.post('/user/token', asyncHandler(async (req, res) => {
-    const name=req.body.name;
-    const password=req.body.password;
-    const hashedpassword = await User.findOne({name: name});
+    const name = req.body.name;
+    const password = req.body.password;
+    const hashedpassword = await User.findOne({
+        name: name
+    });
 
     try {
         if (await argon2.verify(hashedpassword['password'], password)) {
@@ -176,7 +202,7 @@ app.post('/user/token', asyncHandler(async (req, res) => {
             status: "no user"
         })
     }
-}))  
+}))
 
 app.use(errorHandler)
 app.use('*', undefinedEndpointHandler)
