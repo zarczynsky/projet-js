@@ -56,14 +56,11 @@ app.get('/burak', (req, res) => {
     res.send('<center>Something called buraki has been requested. Sadly, there is no buraki here.<br/>Here\'s a burak for you:<br/><img src="https://i.pinimg.com/originals/aa/7a/54/aa7a54f2db2336748cd4bb46c4013fd0.jpg"></center>')
 })
 
-/*
-const dish1 = new Dish({name:'zupa pomidorowa', ingredients:['pomidor','woda'], time:15, text:'pomieszaj wszytsko', likes:0});
-const dish2 = new Dish({name:'rosół', ingredients:['kurczak', 'woda'], time:10, text:'pomieszaj wszytsko', likes:0});
-const dish3 = new Dish({name:'klopsiki', ingredients:['kurczak'], time:50, text:'pomieszaj wszytsko', likes:0});
-const dish4 = new Dish({name:'lody', ingredients:['woda', 'truskawki'], time:25, text:'pomieszaj wszytsko', likes:0});
-const dish5 = new Dish({name:'tort', ingredients:['truskawki', 'proszek'], time:30, text:'pomieszaj wszytsko', likes:0});
-*/
-
+// const dish1 = new Dish({name:'zupa pomidorowa', ingredients:['pomidor','woda'], time:15, text:'pomieszaj wszytsko', likes:0});
+// const dish2 = new Dish({name:'rosół', ingredients:['kurczak', 'woda'], time:10, text:'pomieszaj wszytsko', likes:0});
+// const dish3 = new Dish({name:'klopsiki', ingredients:['kurczak'], time:50, text:'pomieszaj wszytsko', likes:0});
+// const dish4 = new Dish({name:'lody', ingredients:['woda', 'truskawki'], time:25, text:'pomieszaj wszytsko', likes:0});
+// const dish5 = new Dish({name:'tort', ingredients:['truskawki', 'proszek'], time:30, text:'pomieszaj wszytsko', likes:0});
 
 app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
     const name = req.body.name;
@@ -188,8 +185,3 @@ app.post('/user/token', asyncHandler(async (req, res) => {
 
 app.use(errorHandler)
 app.use('*', undefinedEndpointHandler)
-
-//The 404 Route (ALWAYS Keep this as the last route)
-// app.get('*', function(req, res){
-//     res.status(404).send('<body style="background-color:black; padding: 30px; color: white"><center><h2><u>404 Error</u></h2><h1>I have no idea where this will lead us. But I have a definite feeling it will be a place both wonderful and strange.</h1>- Agent Dale Cooper.</center></body>');
-// });
