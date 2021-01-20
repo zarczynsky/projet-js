@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const User = require('../schema/userSchema');
+const User = require('../model/userSchema');
 const UnauthorizedException = require("../exceptions/unauthorized-exception");
 
 

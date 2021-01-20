@@ -8,25 +8,31 @@ mongoose.connect('mongodb://localhost:27017/test', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
-mongoose.set('useCreateIndex', true);
+mongoose.connection.once('open',() => {
+    console.log('Database connected');
+    mongoose.set('useCreateIndex', true);
+})
+
+mongoose.connection.on('error', () => {
+    console.error('Database error');
+})
+
 
 const cookieParser = require('cookie-parser')
-const config = require('./config')
+const config = require('./config')  
 const jwt = require('jsonwebtoken');
 const auth = require('./middlewares/auth')
 
-const Dish = require('./schema/dishSchema')
+const Dish = require('./model/dishSchema')
 const asyncHandler = require("./api/async-handler")
 const {
     sign
 } = require('./services/jwt')
 
-const User = require('./schema/userSchema')
+const User = require('./model/userSchema')
 
 const argon2 = require('argon2');
 app.use(cookieParser(config.cookiesSecret))
-
-
 const UnauthorizedException = require("./exceptions/unauthorized-exception");
 
 const errorHandler = require('./middlewares/errorHandler');
@@ -55,15 +61,54 @@ app.get('/rzodkiew', asyncHandler(async (req, res) => {
 app.get('/burak', asyncHandler(async (req, res) => {
     res.send('<center>Something called buraki has been requested. Sadly, there is no buraki here.<br/>Here\'s a burak for you:<br/><img src="https://i.pinimg.com/originals/aa/7a/54/aa7a54f2db2336748cd4bb46c4013fd0.jpg"></center>')
 }))
+  
 
+// devZONE
+app.get('/admin/dbinit', (req,res)=> {
+    const dish1 = new Dish({name:'zupa pomidorowa', ingredients:['pomidor','woda'], time:15, text:'pomieszaj wszytsko', likes:0});
+    const dish2 = new Dish({name:'rosół', ingredients:['kurczak', 'woda'], time:10, text:'pomieszaj wszytsko', likes:0});
+    const dish3 = new Dish({name:'klopsiki', ingredients:['kurczak'], time:50, text:'pomieszaj wszytsko', likes:0});
+    const dish4 = new Dish({name:'lody', ingredients:['woda', 'truskawki'], time:25, text:'pomieszaj wszytsko', likes:0});
+    const dish5 = new Dish({name:'tort3', ingredients:['truskawki', 'proszek'], time:30, text:'pomieszaj wszytsko', likes:0});
+    dish1.save()
+    dish2.save()
+    dish3.save()
+    dish4.save()
+    dish5.save()
+    res.send(`blabla`)
+})
+// /devZONE
 
-// const dish1 = new Dish({name:'zupa pomidorowa', ingredients:['pomidor','woda'], time:15, text:'pomieszaj wszytsko', likes:0});
-// const dish2 = new Dish({name:'rosół', ingredients:['kurczak', 'woda'], time:10, text:'pomieszaj wszytsko', likes:0});
-// const dish3 = new Dish({name:'klopsiki', ingredients:['kurczak'], time:50, text:'pomieszaj wszytsko', likes:0});
-// const dish4 = new Dish({name:'lody', ingredients:['woda', 'truskawki'], time:25, text:'pomieszaj wszytsko', likes:0});
-// const dish5 = new Dish({name:'tort', ingredients:['truskawki', 'proszek'], time:30, text:'pomieszaj wszytsko', likes:0});
+app.get('/dish/find/name', asyncHandler(async (req, res) => {
+    const name = req.body.name;
+    //name = req.params.n;
+    const dish = await Dish.findOne({
+        name: name
+    }, function (err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            return (result);
+        }
+    });
 
+    const author_name = await User.findOne({
+        _id: dish["author_id"]
+    }, function (err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            return (result["name"]);
+        }
+    });
 
+    console.log(author_name.user_view())
+    let result = {};
+    result["author"] = author_name["name"];
+    result["dish"] = dish
+
+    res.json(result);
+}))
 
 app.post('/dish/find/name/:n', asyncHandler(async (req, res) => {
     const name = req.body.name;
@@ -110,7 +155,6 @@ app.post('/dish/find/ingredients', auth({
         }
     });
 }))
-
 
 app.post('/dish', asyncHandler(async (req, res) => {
     const name = req.body.name;
@@ -203,6 +247,4 @@ app.post('/user/token', asyncHandler(async (req, res) => {
         })
     }
 }))
-
-app.use(errorHandler)
 app.use('*', undefinedEndpointHandler)
