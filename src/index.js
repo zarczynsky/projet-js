@@ -6,6 +6,7 @@ const errorHandler = require("./middlewares/errorHandler");
 const mongoose = require('mongoose')
 const config = require('./config')
 const cookieParser = require('cookie-parser')
+const bodyParser = require('body-parser');
 const undefinedEndpointHandler = require('./middlewares/undefinedEndpointHandler');
 const port = process.env.PORT || 3000;
 const env = process.env.NODE_ENV || 'development';
@@ -25,9 +26,16 @@ app.use(express.json());
 app.use(cookieParser(config.cookiesSecret))
 app.use('/api', api)
 app.use(errorHandler);
+
 app.listen(port, '127.0.0.1', () => {
     console.log(`Server listening on http://127.0.0.1:${port} in ${env} mode`);
 })
+
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ // TODO: Check, do we need it really?
+    extended: true
+})); // support encoded bodies
+
 
 app.get('/rzodkiew', asyncHandler(async (req, res) => {
     res.send(`

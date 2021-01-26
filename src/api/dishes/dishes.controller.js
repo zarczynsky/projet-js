@@ -4,6 +4,10 @@ const asyncHandler = require("../async-handler");
 const auth = require('../../middlewares/auth')
 const router = new Router();
 
+router.get('/route-test/:n?', asyncHandler(async (req, res) => {
+    res.send(`${req.params.n}`)
+}))
+
 router.post('/', asyncHandler(async (req, res) => {
     const name = req.body.name;
     const ingredients = req.body.ingredients;
@@ -67,6 +71,8 @@ router.get('/find/name', asyncHandler(async (req, res) => {
 
     res.json(result);
 }))
+
+
 
 router.post('/find/name/:n', asyncHandler(async (req, res) => {
     const name = req.body.name;
