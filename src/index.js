@@ -4,13 +4,17 @@ const api = require('./api')
 const asyncHandler = require('./api/async-handler')
 const errorHandler = require("./middlewares/errorHandler");
 const mongoose = require('mongoose')
+const config = require('./config')
+const cookieParser = require('cookie-parser')
 const undefinedEndpointHandler = require('./middlewares/undefinedEndpointHandler');
 const port = process.env.PORT || 3000;
 const env = process.env.NODE_ENV || 'development';
+
 mongoose.connect('mongodb://localhost:27017/test2', {debug: true, useNewUrlParser: true, useUnifiedTopology: true})
 
 mongoose.connection.once('open', () => {
     console.log('Databse connected');
+    mongoose.set('useCreateIndex', true);
 })
 
 mongoose.connection.on('error', () => {
@@ -18,6 +22,7 @@ mongoose.connection.on('error', () => {
 })
 
 app.use(express.json());
+app.use(cookieParser(config.cookiesSecret))
 app.use('/api', api)
 app.use(errorHandler);
 app.listen(port, '127.0.0.1', () => {

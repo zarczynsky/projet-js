@@ -17,7 +17,6 @@ mongoose.connection.on('error', () => {
     console.error('Database error');
 })
 
-
 const cookieParser = require('cookie-parser')
 const config = require('./config')  
 const jwt = require('jsonwebtoken');
