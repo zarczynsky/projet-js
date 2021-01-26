@@ -23,13 +23,13 @@ const config = require('./config')
 const jwt = require('jsonwebtoken');
 const auth = require('./middlewares/auth')
 
-const Dish = require('./model/dishSchema')
+const Dish = require('./models/dishSchema')
 const asyncHandler = require("./api/async-handler")
 const {
     sign
 } = require('./services/jwt')
 
-const User = require('./model/userSchema')
+const User = require('./models/userSchema')
 
 const argon2 = require('argon2');
 app.use(cookieParser(config.cookiesSecret))

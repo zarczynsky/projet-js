@@ -6,7 +6,8 @@
   "scripts": {
     "test": "test",
     "start": "node app.js",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "dev2": "nodemon index.js"
   },
   "keywords": [
     "recipe",
