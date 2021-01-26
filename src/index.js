@@ -39,3 +39,5 @@ app.get('/burak', asyncHandler(async (req, res) => {
 }))
 
 app.use('*', undefinedEndpointHandler)
+
+// TODO: Anywhere there's a 418, add a more adequate HTTP status

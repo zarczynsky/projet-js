@@ -39,7 +39,6 @@ router.post('/', asyncHandler(async (req, res) => {
 
 }))
 
-
 router.post('/token', asyncHandler(async (req, res) => {
     const name = req.body.name;
     const password = req.body.password;

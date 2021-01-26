@@ -12,7 +12,7 @@ router.post('/', asyncHandler(async (req, res) => {
     const likes = req.body.likes;
     const id = req.body.author_id
 
-    const token = req.cookies.auth // TODO: Throws "Cannot read property 'auth' of undefined"
+    const token = req.cookies.auth // TODO: Throws "Cannot read property 'auth' of undefined" 
 
     const ai = new Dish({
         name: name,
@@ -25,8 +25,8 @@ router.post('/', asyncHandler(async (req, res) => {
     await ai.save(function (err) {
         if (err) {
             console.log(err);
-            res.json({
-                status: "Błąd bazy"
+            res.status(418).json({
+                status: "Błąd bazyy"
             })
         } else {
             res.json({
