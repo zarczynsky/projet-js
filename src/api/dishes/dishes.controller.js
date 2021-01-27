@@ -69,9 +69,7 @@ router.get('/:n', asyncHandler(async (req, res) => {
     let result = {};
     const name = req.params.n;
 
-    const dish = await Dish.findOne({
-        name: name
-    }, function (err, result) {
+    const dish = await Dish.findOne({ name: name }, function (err, result) {
         if (err) {
             console.log(err);
         } else {

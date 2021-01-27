@@ -5,12 +5,12 @@ const argon2 = require('argon2');
 const config = require('../../config');
 // const EmailTakenException = require("../../exceptions/email-taken-exception");
 const {sign} = require('../../services/jwt')
+const jwt = require('jsonwebtoken');   
 // const auth = require('../../middlewares/auth')
 
 const router = new Router();
 
 // POST /api/users
-
 router.post('/', asyncHandler(async (req, res) => {
     const name = req.body.name;
     const password = req.body.password;
@@ -66,5 +66,16 @@ router.post('/sign-in', asyncHandler(async (req, res) => {
         })
     }
 }))
+
+router.get('/', (req, res) => {
+    const token = req.cookies.auth
+    if(token) {
+        let decodedToken = jwt.verify(token, config.jwtSecret);
+        res.json({currentUser: decodedToken.sub})
+    }
+    else {
+        res.json({status: "User not signed-in"})
+    }
+}); 
 
 module.exports = router
