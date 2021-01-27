@@ -5,8 +5,7 @@ const argon2 = require('argon2');
 const config = require('../../config');
 // const EmailTakenException = require("../../exceptions/email-taken-exception");
 const {sign} = require('../../services/jwt')
-const jwt = require('jsonwebtoken');   
-// const auth = require('../../middlewares/auth')
+const jwt = require('jsonwebtoken');    
 
 const router = new Router();
 

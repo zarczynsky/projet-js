@@ -6,11 +6,8 @@ const authRouter = require("./auth/auth.controller")
 const adminRouter = require("./admin/admin.controller")
 const router = new Router()
 
-
-// /api/...
 router.use('/dishes', dishesRouter)
-router.use('/users', usersRouter)
-router.use('/auth', authRouter);
+router.use('/users', usersRouter) 
 router.use('/admin', adminRouter)
 
 router.get('/rzodkiew', asyncHandler(async (req, res) => {
