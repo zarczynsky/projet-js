@@ -1,9 +1,10 @@
 const {Router} = require('express');
 const asyncHandler = require("../async-handler");
 const User = require("../../models/userSchema");
-// const config = require('../../../config');
+const argon2 = require('argon2');
+const config = require('../../config');
 // const EmailTakenException = require("../../exceptions/email-taken-exception");
-// const {sign} = require('../../services/jwt')
+const {sign} = require('../../services/jwt')
 // const auth = require('../../middlewares/auth')
 
 const router = new Router();
@@ -38,7 +39,7 @@ router.post('/', asyncHandler(async (req, res) => {
     }
 }))
 
-router.post('/token', asyncHandler(async (req, res) => {
+router.post('/sign-in', asyncHandler(async (req, res) => {
     const name = req.body.name;
     const password = req.body.password;
     const hashedpassword = await User.findOne({
@@ -47,7 +48,6 @@ router.post('/token', asyncHandler(async (req, res) => {
 
     try {
         if (await argon2.verify(hashedpassword['password'], password)) {
-
             const token = sign(name);
             res.cookie('auth', token, config.cookiesOptions)
 
@@ -60,6 +60,7 @@ router.post('/token', asyncHandler(async (req, res) => {
             })
         }
     } catch (err) {
+        console.log(err.stack);
         res.json({
             status: "no user"
         })
