@@ -36,7 +36,6 @@ router.post('/', asyncHandler(async (req, res) => {
             status: "error"
         })
     }
-
 }))
 
 router.post('/token', asyncHandler(async (req, res) => {

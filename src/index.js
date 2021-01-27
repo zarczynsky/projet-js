@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({ // TODO: Check, do we need it really?
     extended: true
 })); // support encoded bodies
 
-
+// Test Zone:
 app.get('/rzodkiew', asyncHandler(async (req, res) => {
     res.send(`
     <center>It's-a-me, rzodkiewko!<br/><img src="https://www.rynek-rolny.pl/images/articles/560/67c46c78378b9f058d70895ce23a6158-carmesa.jpg"/></center>`) // TODO: Make it a 404

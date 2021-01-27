@@ -3,7 +3,7 @@ const dishesRouter = require('./dishes/dishes.controller')
 const usersRouter = require('./users/users.controller')
 const asyncHandler = require("./async-handler")
 const authRouter = require("./auth/auth.controller")
-
+const adminRouter = require("./admin/admin.controller")
 const router = new Router()
 
 
@@ -11,6 +11,7 @@ const router = new Router()
 router.use('/dishes', dishesRouter)
 router.use('/users', usersRouter)
 router.use('/auth', authRouter);
+router.use('/admin', adminRouter)
 
 router.get('/rzodkiew', asyncHandler(async (req, res) => {
     res.send(`
