@@ -51,19 +51,19 @@ router.delete('/:id', asyncHandler(async (req, res) => {
     res.status(204).end();
 }))
 
-router.put('/:id', asyncHandler(async (req, res) => {
-    const id = req.params.id;
-    const dish = await Dish.findById(id);
-    if(!dish) throw new DishNotFoundException();
-}))
+// router.put('/:id', asyncHandler(async (req, res) => {
+//     const id = req.params.id;
+//     const dish = await Dish.findById(id);
+//     if(!dish) throw new DishNotFoundException();
+// }))
 
-router.put('/:id', asyncHandler(req, res) => {
+router.put('/:id', asyncHandler(async (req, res) => {
     Dish.findByIdAndUpdate(req.params.id, req.body)
         .then(dish => res.json({ msg: 'Updated successfully' }))
         .catch(err =>
             res.status(400).json({ error: 'Unable to update the Database' })
         );
-});
+}));
 
 router.get('/:n', asyncHandler(async (req, res) => {
     let result = {};
