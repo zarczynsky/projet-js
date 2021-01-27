@@ -188,6 +188,21 @@ app.post('/dish', asyncHandler(async (req, res) => {
 
 }))
 
+router.delete('/dish/:id', asyncHandler(async (req, res) => {
+    const {id} = req.params;
+    const {id} = req.params;
+
+    const book = await Book.findById(id);
+    if(!book) throw new BookNotFoundException();
+
+    await book.remove();
+    res.status(204).end();
+
+}))
+
+
+
+
 
 app.post('/user', asyncHandler(async (req, res) => {
     const name = req.body.name;

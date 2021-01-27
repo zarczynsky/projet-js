@@ -4,6 +4,7 @@ const asyncHandler = require("../async-handler");
 const auth = require('../../middlewares/auth')
 const router = new Router();
 const User = require('../../models/userSchema')
+const DishNotFoundException = require("../../exceptions/dish-not-found-exception")
 
 // /api/dishes/
 
@@ -19,7 +20,7 @@ router.post('/', asyncHandler(async (req, res) => {
     const recipe = req.body.recipe;
     const likes = req.body.likes;
     // const id = req.body.author_id
-//     const token = req.cookies.auth // TODO: Throws "Cannot read property 'auth' of undefined" 
+    // const token = req.cookies.auth // TODO: Throws "Cannot read property 'auth' of undefined" 
 
     const dish = new Dish({
         name: name,
@@ -42,6 +43,20 @@ router.post('/', asyncHandler(async (req, res) => {
     });
 }))
 
+router.delete('/:id', asyncHandler(async (req, res) => {
+    const {id} = req.params;
+    const dish = await Dish.findById(id);
+    if(!dish) throw new DishNotFoundException();
+    await dish.remove();
+    res.status(204).end();
+}))
+
+router.put('/:id', asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const dish = await Dish.findById(id);
+    if(!dish) throw new DishNotFoundException();
+}))
+
 router.get('/:n', asyncHandler(async (req, res) => {
     let result = {};
     const name = req.params.n;
@@ -56,7 +71,6 @@ router.get('/:n', asyncHandler(async (req, res) => {
         }
     });
     result["dish"] = dish
-    
     // TODO: Finding author name, add to result
     // const author_name = await User.findOne({
     //     _id: dish["author_id"]
