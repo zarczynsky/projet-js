@@ -21,26 +21,25 @@ router.post('/', asyncHandler(async (req, res) => {
     // const id = req.body.author_id
 //     const token = req.cookies.auth // TODO: Throws "Cannot read property 'auth' of undefined" 
 
-//     const ai = new Dish({
-//         name: name,
-//         ingredients: ingredients,
-//         time: time,
-//         text: recipe,
-//         likes: likes,
-//         author_id: id
-//     });
-//     await ai.save(function (err) {
-//         if (err) {
-//             console.log(err);
-//             res.status(418).json({
-//                 status: "Błąd bazyy"
-//             })
-//         } else {
-//             res.json({
-//                 status: "Przepis dodany"
-//             });
-//         }
-//     });
+    const dish = new Dish({
+        name: name,
+        ingredients: ingredients,
+        time: time,
+        text: recipe,
+        likes: likes,
+        // author_id: id
+    });
+
+    await dish.save(function (err) {
+        if (err) {
+            console.log(err);
+            res.status(400).json({
+                errorMesssage: "Database error"
+            })
+        } else {
+            res.status(200).json({status: "Przepis dodany"});
+        }
+    });
 }))
 
 router.get('/:n', asyncHandler(async (req, res) => {
