@@ -11,7 +11,7 @@ const undefinedEndpointHandler = require('./middlewares/undefinedEndpointHandler
 const port = process.env.PORT || 3000;
 const env = process.env.NODE_ENV || 'development';
 
-mongoose.connect('mongodb://localhost:27017/test2', {debug: true, useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect('mongodb://localhost:27017/test', {debug: true, useNewUrlParser: true, useUnifiedTopology: true})
 
 mongoose.connection.once('open', () => {
     console.log('Databse connected');

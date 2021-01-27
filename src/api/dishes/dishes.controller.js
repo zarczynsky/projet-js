@@ -10,7 +10,6 @@ const config = require('../../config');
 
 
 // /api/dishes/
-
 router.get('/test/:n?', asyncHandler(async (req, res) => {
     res.send(`${req.params.n}`)
 }))
@@ -44,22 +43,6 @@ router.post('/', asyncHandler(async (req, res) => {
             likes: likes
         });
     }
-
-    // const name = req.body.name;
-    // const ingredients = req.body.ingredients;
-    // const time = req.body.times;
-    // const recipe = req.body.recipe;
-    // const likes = req.body.likes;
-    // const author_name = req.body.author_id
-
-    // const dish = new Dish({
-    //     name: name,
-    //     ingredients: ingredients,
-    //     time: time,
-    //     text: recipe,
-    //     likes: likes,
-    //     author_name: id
-    // });
 
     await dish.save(function (err) {
         if (err) {
