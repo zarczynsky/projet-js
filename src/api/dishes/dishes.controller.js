@@ -5,6 +5,9 @@ const auth = require('../../middlewares/auth')
 const router = new Router();
 const User = require('../../models/userSchema')
 const DishNotFoundException = require("../../exceptions/dish-not-found-exception")
+const jwt = require('jsonwebtoken');    
+const config = require('../../config');
+
 
 // /api/dishes/
 
@@ -14,22 +17,49 @@ router.get('/test/:n?', asyncHandler(async (req, res) => {
 
 // TODO: creating new dishes
 router.post('/', asyncHandler(async (req, res) => {
+    const token = req.cookies.auth
     const name = req.body.name;
     const ingredients = req.body.ingredients;
     const time = req.body.times;
     const recipe = req.body.recipe;
-    const likes = req.body.likes;
-    const id = req.body.author_id
-    const token = req.cookies.auth
-    
-    const dish = new Dish({
-        name: name,
-        ingredients: ingredients,
-        time: time,
-        text: recipe,
-        likes: likes,
-        author_id: id
-    });
+    const likes = req.body.likes; 
+    let dish;
+    if(token) {
+        let currentUser = jwt.verify(token, config.jwtSecret).sub;
+        dish = new Dish({
+            name: name,
+            ingredients: ingredients,
+            time: time,
+            text: recipe,
+            likes: likes,
+            author_name: currentUser
+        });
+    }
+    else {
+         dish = new Dish({
+            name: name,
+            ingredients: ingredients,
+            time: time,
+            text: recipe,
+            likes: likes
+        });
+    }
+
+    // const name = req.body.name;
+    // const ingredients = req.body.ingredients;
+    // const time = req.body.times;
+    // const recipe = req.body.recipe;
+    // const likes = req.body.likes;
+    // const author_name = req.body.author_id
+
+    // const dish = new Dish({
+    //     name: name,
+    //     ingredients: ingredients,
+    //     time: time,
+    //     text: recipe,
+    //     likes: likes,
+    //     author_name: id
+    // });
 
     await dish.save(function (err) {
         if (err) {

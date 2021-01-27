@@ -6,10 +6,11 @@ const dishSchema = new mongoose.Schema({
     time: {type: Number},
     text: {type: String},
     likes: {type: Number},
-    author_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
-    }
+    author_name: {type: String}
+    // author_id: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'user'
+    // }
 });
 
 dishSchema.methods = {
