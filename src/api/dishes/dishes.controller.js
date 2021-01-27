@@ -20,8 +20,8 @@ router.post('/', asyncHandler(async (req, res) => {
     const recipe = req.body.recipe;
     const likes = req.body.likes;
     const id = req.body.author_id
-    const token = req.cookies.auth // TODO: Throws "Cannot read property 'auth' of undefined"
-
+    const token = req.cookies.auth
+    
     const dish = new Dish({
         name: name,
         ingredients: ingredients,
@@ -50,12 +50,6 @@ router.delete('/:id', asyncHandler(async (req, res) => {
     await dish.remove();
     res.status(204).end();
 }))
-
-// router.put('/:id', asyncHandler(async (req, res) => {
-//     const id = req.params.id;
-//     const dish = await Dish.findById(id);
-//     if(!dish) throw new DishNotFoundException();
-// }))
 
 router.put('/:id', asyncHandler(async (req, res) => {
     Dish.findByIdAndUpdate(req.params.id, req.body)
@@ -93,53 +87,6 @@ router.get('/:n', asyncHandler(async (req, res) => {
     res.status(200).json(result);
 }))
 
-// router.post('/find/ingredients', auth({
-//     required: true
-// }), asyncHandler(async (req, res) => {
-//     const reqIngredients = req.body.ingredients;
-//     Dish.find({
-//         ingredients: reqIngredients
-//     }, function (err, result) {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             res.json(result);
-//         }
-//     });
-
-// REMOVE
-// router.post('/find/name/:n', asyncHandler(async (req, res) => {
-//     const name = req.body.name;
-//     //name = req.params.n;
-//     const dish = await Dish.findOne({
-//         name: name
-//     }, function (err, result) {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             return (result);
-//         }
-//     });
-
-//     const author_name = await User.findOne({
-//         _id: dish["author_id"]
-//     }, function (err, result) {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             return (result["name"]);
-//         }
-//     });
-
-//     console.log(author_name.user_view())
-//     let result = {};
-//     result["author"] = author_name["name"];
-//     result["dish"] = dish
-
-//     res.json(result);
-// }))
-
-// }))
 
 
 module.exports = router

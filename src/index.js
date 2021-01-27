@@ -31,12 +31,11 @@ app.listen(port, '127.0.0.1', () => {
     console.log(`Server listening on http://127.0.0.1:${port} in ${env} mode`);
 })
 
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ // TODO: Check, do we need it really?
+app.use(bodyParser.json()); 
+app.use(bodyParser.urlencoded({ 
     extended: true
-})); // support encoded bodies
+})); 
 
-// Test Zone:
 app.get('/rzodkiew', asyncHandler(async (req, res) => {
     res.send(`
     <center>It's-a-me, rzodkiewko!<br/><img src="https://www.rynek-rolny.pl/images/articles/560/67c46c78378b9f058d70895ce23a6158-carmesa.jpg"/></center>`) // TODO: Make it a 404
@@ -47,5 +46,3 @@ app.get('/burak', asyncHandler(async (req, res) => {
 }))
 
 app.use('*', undefinedEndpointHandler)
-
-// TODO: Anywhere there's a 418, add a more adequate HTTP status
