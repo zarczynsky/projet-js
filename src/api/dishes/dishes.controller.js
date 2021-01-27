@@ -57,6 +57,14 @@ router.put('/:id', asyncHandler(async (req, res) => {
     if(!dish) throw new DishNotFoundException();
 }))
 
+router.put('/:id', asyncHandler(req, res) => {
+    Dish.findByIdAndUpdate(req.params.id, req.body)
+        .then(dish => res.json({ msg: 'Updated successfully' }))
+        .catch(err =>
+            res.status(400).json({ error: 'Unable to update the Database' })
+        );
+});
+
 router.get('/:n', asyncHandler(async (req, res) => {
     let result = {};
     const name = req.params.n;
